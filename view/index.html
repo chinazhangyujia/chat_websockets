@@ -8,21 +8,21 @@
       <ul id = "chat_message"></ul>
     </div>
     <div>
-      <form id = "loginform" action = "/login" method = "post">
+      <form id = "loginform">
         account: <input type = "text" name = "username"  id = "username"/>
-        <input type = "submit" value = "login"/>
+        <input type = "button" value = "login" id="loginSubmit" />
       </form>
     </div>
     <div class = "input">
       <form id = "chatform">
         <div>
-          send to: <input type = "text", name = "send_to", id = "send_to"/>
+          send to: <input type = "text" name = "send_to" id = "send_to"/>
         </div>
         <div>
-          <input type = "text", name = "content", id = "content", size = "70" placeholder = "tap here"/>
+          <input type = "text" name = "content" id = "content" size = "70" placeholder = "tap here"/>
         </div>
         <div>
-          <input type = "submit", id = "submit", value = "send"/>
+          <input type = "button" id = "submit" value = "send"/>
         </div>
       </form>
     </div>
@@ -31,21 +31,27 @@
   <script type = 'text/javascript' src = 'static/jquery-3.2.0.min.js'></script>
   <script type = 'text/javascript' src = 'static/socket.io.js'></script>
   <script type = 'text/javascript'>
-  $(function(){
-    var socket = io();
+    var socket = io.connect('http://localhost:8000');
+    $('#loginSubmit').click(function() {
+      var username = $("#username").val()
+      if (!username) {
+        return
+      }
+      socket.emit('add user', username)
+    })
 
-    $('#chatform').submit(function() {
-      var message = {};
-      message.content = $('#content').val();
-      message.send_to = $('#send_to').val();
-      socket.emit('from_user', message);
-      $('#content').val('');
-      return false;
+    $('#submit').click(function() {
+      var msg = $("#content").val()
+      var send_to = $("#send_to").val()
+      if (!msg || !send_to) {
+        return
+      }
+      socket.emit('say', {send_to, msg})
+      $("#content").val = ""
     })
-    socket.on('to_user', function(data){
-      $('#chat_message').append("<li>" + data + "</li>");
+    socket.on('broadcast', function(msg) {
+      $('#chat_message').append(`<li>${msg}</li>`)
     })
-  });
   </script>
 
 </html>
