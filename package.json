@@ -1,0 +1,26 @@
+{
+  "name": "chat_websockets",
+  "version": "1.0.0",
+  "description": "simple function chat server through websockets using Nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chinazhangyujia/chat_websockets.git"
+  },
+  "author": "yujia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chinazhangyujia/chat_websockets/issues"
+  },
+  "homepage": "https://github.com/chinazhangyujia/chat_websockets#readme",
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "jQuery": "^1.7.4",
+    "jsdom": "^9.12.0",
+    "socket.io": "*"
+  }
+}

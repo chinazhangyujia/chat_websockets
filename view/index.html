@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>chat here</title>
+    <h2>char here</h2>
+  </head>
+  <body>
+    <div class = "message">
+      <ul id = "chat_message"></ul>
+    </div>
+    <div>
+      <form id = "loginform" action = "/login" method = "post">
+        account: <input type = "text" name = "username"  id = "username"/>
+        <input type = "submit" value = "login"/>
+      </form>
+    </div>
+    <div class = "input">
+      <form id = "chatform">
+        <div>
+          send to: <input type = "text", name = "send_to", id = "send_to"/>
+        </div>
+        <div>
+          <input type = "text", name = "content", id = "content", size = "70" placeholder = "tap here"/>
+        </div>
+        <div>
+          <input type = "submit", id = "submit", value = "send"/>
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <script type = 'text/javascript' src = 'static/jquery-3.2.0.min.js'></script>
+  <script type = 'text/javascript' src = 'static/socket.io.js'></script>
+  <script type = 'text/javascript'>
+  $(function(){
+    var socket = io();
+
+    $('#chatform').submit(function() {
+      var message = {};
+      message.content = $('#content').val();
+      message.send_to = $('#send_to').val();
+      socket.emit('from_user', message);
+      $('#content').val('');
+      return false;
+    })
+    socket.on('to_user', function(data){
+      $('#chat_message').append("<li>" + data + "</li>");
+    })
+  });
+  </script>
+
+</html>
