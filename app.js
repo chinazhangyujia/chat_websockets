@@ -6,7 +6,6 @@ var urlencodedParser = bodyParser.urlencoded({extended: false});
 var router = require('./router/index');
 var PORT = 8000;
 var clients = [];
-var sockets = [];
 
 var server = http.Server(app).listen(PORT, function(){
   console.log('listening PORT ' + PORT);
@@ -20,12 +19,11 @@ app.use('/', router);
 
 io.on('connection', function(socket){
 
-  app.post('/login', function(req, res){
-    sockets.push(socket);
-    var client = {name: req.body.username, socketid: socket.id};
-    //console.log('this  '+ client);
+  socket.on('login', function(data){
+    var client = {name: data, socketid: socket.id};
     clients.push(client);
-    res.redirect('/');
+    io.emit('to_user', data + ' login');
+    console.log(clients.length + ' users left');
   });
 
   // sockets.push(socket);
@@ -38,22 +36,25 @@ io.on('connection', function(socket){
       return a.name === send_to;
     });
 
-    var target_socket = sockets.find(function(a){
-      return a.id === target_client.socketid;
-    });
+    var target_socketid = target_client.socketid;
     //console.log(target_socket);
 
-    console.log(target_socket == socket);
-
     //console.log(socket);
+    io.to(target_socketid).emit('to_user', data.content);
     socket.emit('to_user', data.content);
     //io.emit('to_user', data.content);
     console.log(data.content);
-    console.log('send message to ' + target_client.name + ' users');
+    console.log('send message to ' + target_client.name +  ' ' + target_socketid);
   });
 
-  // socket.on('disconnect', function(socket){
-  //   sockets.splice(clients.indexOf({socket}), 1);
-  //   console.log(sockets.length + ' users left');
-  // });
+  socket.on('disconnect', function(socket){
+    function findSocketIndex(client){
+      return client.socketid == socket.id;
+    }
+    var indexid = clients.findIndex(findSocketIndex);
+
+    clients.splice(indexid, 1);
+    console.log(socket.id + 'removed');
+    console.log(clients.length + ' users left');
+  });
 });

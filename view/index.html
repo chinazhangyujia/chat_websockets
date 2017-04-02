@@ -10,7 +10,7 @@
     <div>
       <form id = "loginform" action = "/login" method = "post">
         account: <input type = "text" name = "username"  id = "username"/>
-        <input type = "submit" value = "login"/>
+        <input type = "button" value = "login" id = "login"/>
       </form>
     </div>
     <div class = "input">
@@ -22,7 +22,7 @@
           <input type = "text", name = "content", id = "content", size = "70" placeholder = "tap here"/>
         </div>
         <div>
-          <input type = "submit", id = "submit", value = "send"/>
+          <input type = "button", id = "send", value = "send"/>
         </div>
       </form>
     </div>
@@ -33,8 +33,11 @@
   <script type = 'text/javascript'>
   $(function(){
     var socket = io();
-
-    $('#chatform').submit(function() {
+    $('#login').click(function(){
+      socket.emit('login', $('#username').val());
+    })
+    
+    $('#send').click(function() {
       var message = {};
       message.content = $('#content').val();
       message.send_to = $('#send_to').val();
