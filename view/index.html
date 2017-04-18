@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>chat here</title>
-    <h2>char here</h2>
+    <h2>chat here</h2>
   </head>
   <body>
     <div class = "message">
@@ -36,7 +36,7 @@
     $('#login').click(function(){
       socket.emit('login', $('#username').val());
     })
-    
+
     $('#send').click(function() {
       var message = {};
       message.content = $('#content').val();

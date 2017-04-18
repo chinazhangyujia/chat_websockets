@@ -32,9 +32,14 @@ io.on('connection', function(socket){
   console.log(clients.length + ' users left');
   socket.on('from_user', function(data){
     var send_to = data.send_to;
-    var target_client = clients.find(function(a){
+    var target_client;
+
+    target_client = clients.find(function(a){
       return a.name === send_to;
     });
+
+    if (target_client === undefined)
+      return;
 
     var target_socketid = target_client.socketid;
     //console.log(target_socket);
